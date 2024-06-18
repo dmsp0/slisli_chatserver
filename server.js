@@ -1,7 +1,8 @@
+// server.js
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
-const moment = require('moment'); // moment 모듈 추가
+const moment = require('moment');
 
 const PORT = 5000;
 const app = express();
@@ -27,7 +28,7 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (data) => {
     console.log('Message received:', data.message);
-    io.emit('chat message', { message: data.message, name: socket.id, time: moment().format('h:mm:ss A') });
+    io.to(data.roomId).emit('chat message', { message: data.message, userId: socket.id, nickname: data.nickname, time: moment().format('h:mm:ss A') });
   });
 
   socket.on('disconnect', () => {
