@@ -27,8 +27,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chat message', (data) => {
-    console.log('Message received:', data.message);
-    io.to(data.roomId).emit('chat message', { message: data.message, userId: socket.id, nickname: data.nickname, time: moment().format('h:mm:ss A') });
+    console.log(data.nickname,':', data.message);
+    io.to(data.roomId).emit('chat message', 
+      { message: data.message, 
+        userId: socket.id, 
+        nickname: data.nickname, 
+        time: moment().format('h:mm:ss A') });
   });
 
   socket.on('disconnect', () => {
