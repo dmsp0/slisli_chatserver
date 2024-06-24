@@ -3,6 +3,8 @@ const http = require('http');
 const socketIO = require('socket.io');
 const moment = require('moment');
 
+var filter = new Array('욕설1','욕설2','욕설3');
+
 const PORT = 5000;
 const app = express();
 const server = http.createServer(app);
@@ -50,6 +52,15 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (data) => {
     console.log(`${data.nickname}: ${data.message}`);
+    
+    for(var i=0; i<filter.length; i++){
+      //filter_count에 필터링했을 때 필터링 할 부분이 있는지 구분(indexOf로 찾아줌)
+      filter_count = data.message.indexOf(filter[i])
+      //filter_count로 0이상일 경우(비속어가 있는경우) 필터링
+      if (filter_count >= 0) {
+        data.message = '비속어가 포함되어 있습니다. 건전하게 채팅을 즐겨주세요';
+    }
+    }
     io.to(data.roomId).emit('chat message', {
       message: data.message,
       userId: socket.userId,
